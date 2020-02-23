@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>Canvas</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+</head>
+<body>
+	<canvas id="canvas" width="500" height="500"></canvas>
+	<script type="text/javascript">
+		var can = document.getElementById("canvas").getContext("2d");
+		function drawTriangle() {
+			can.beginPath(); // Для сложной фигуры
+			can.moveTo(10, 15);
+			can.lineTo(20, 100);
+			can.lineTo(100, 50);
+			can.closePath();
+			can.stroke();
+		}
+		function drawRect() {
+			can.strokeStyle="#f00";	
+			can.fillStyle="#fc0";
+			can.lineWidth = 10;
+			can.fillRect(150, 150, 100, 40);
+			can.clearRect(200, 160, 20, 20);
+			can.strokeRect(250, 250, 100, 40);
+		}
+		function drawText() {
+			can.font = "30px Times New Roman";
+			can.fillText("Пример текста", 150, 70);
+		}
+		function drawImg() {
+			var img = document.createElement("img");
+			img.src = "html5.png";
+			img.alt = "";
+			img.onload = function() {
+				can.drawImage(img, 300, 350);
+			}
+		}
+		drawTriangle();
+		drawRect();
+		drawText();
+		drawImg();
+	</script>
+</body>
+</html>

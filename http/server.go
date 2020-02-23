@@ -27,7 +27,12 @@ func start(addr string) (err error) {
 	if err != nil {
 		return fmt.Errorf("can't listen %s: %w", addr, err)
 	}
-	defer listener.Close()
+	defer func() {
+		err := listener.Close()
+		if err != nil {
+			log.Fatalf("Can't close conn: %v", err)
+		}
+	}()
 	for {
 		conn, err := listener.Accept()
 		log.Print("accept connection")
@@ -42,7 +47,12 @@ func start(addr string) (err error) {
 
 
 func handleConn(conn net.Conn) {
-	defer conn.Close()
+	defer func() {
+		err := conn.Close()
+		if err != nil {
+			log.Fatalf("Can't close conn: %v", err)
+		}
+	}()
 	reader := bufio.NewReader(conn)
 	requestLine, err := reader.ReadString('\n')
 	if err != nil {

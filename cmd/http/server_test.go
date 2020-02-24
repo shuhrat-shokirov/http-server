@@ -34,7 +34,7 @@ func Test_server(t *testing.T) {
 		t.Fatalf("can't read response from server: %v", err)
 	}
 	response := string(bytes)
-	if !strings.Contains(response, "HTTP/1.1 200 Ok") {
+	if !strings.Contains(response, "HTTP/1.1 200 OK") {
 		t.Fatalf("non-success response: %s", response)
 	}
 }

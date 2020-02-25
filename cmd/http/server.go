@@ -101,7 +101,7 @@ func handleConn(conn net.Conn) {
 				if(contentType == ""){
 					contentType = "application/pdf"}
 			default:
-				fileName = "cmd/http/files/404-NotxFound.png"
+				fileName = "cmd/http/files/404-NotFound.png"
 				contentType = "image/png"
 			}
 				writeHeader(conn, fileName, contentType, request)

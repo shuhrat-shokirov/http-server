@@ -66,53 +66,55 @@ func handleConn(conn net.Conn) {
 	method, request, protocol := parts[0], parts[1], parts[2]
 	contentType := ""
 	fileName := ""
-	if method == "GET" && protocol == "HTTP/1.1" {
-		if strings.Contains(request, "?download") {
-			contentType = "application/octet-stream"
-			request = strings.Replace(request, "?download", "", -1)
-		}
-		switch request {
-		case "/":
-			fileName = "cmd/http/files/index.html"
-			if contentType == "" {
-				contentType = "text/html"
+	if method == "GET" {
+		if protocol == "HTTP/1.1" {
+			if strings.Contains(request, "?download") {
+				contentType = "application/octet-stream"
+				request = strings.Replace(request, "?download", "", -1)
 			}
-		case "/index-html.html":
-			fileName = "cmd/http/files/index-html.html"
-			if contentType == "" {
-				contentType = "text/html"
-			}
-		case "/1.png":
-			fileName = "cmd/http/files/1.png"
-			if contentType == "" {
+			switch request {
+			case "/":
+				fileName = "cmd/http/files/index.html"
+				if contentType == "" {
+					contentType = "text/html"
+				}
+			case "/index-html.html":
+				fileName = "cmd/http/files/index-html.html"
+				if contentType == "" {
+					contentType = "text/html"
+				}
+			case "/1.png":
+				fileName = "cmd/http/files/1.png"
+				if contentType == "" {
+					contentType = "image/png"
+				}
+			case "/2.jpg":
+				fileName = "cmd/http/files/2.jpg"
+				if contentType == "" {
+					contentType = "image/jpg"
+				}
+			case "/123.txt":
+				fileName = "cmd/http/files/123.txt"
+				if contentType == "" {
+					contentType = "text/html"
+				}
+			case "/1.pdf":
+				fileName = "cmd/http/files/1.pdf"
+				if contentType == "" {
+					contentType = "application/pdf"
+				}
+			case "/html5.png":
+				fileName = "cmd/http/files/html5.png"
+				if contentType == "" {
+					contentType = "application/pdf"
+				}
+			default:
+				fileName = "cmd/http/files/404-NotFound.png"
 				contentType = "image/png"
 			}
-		case "/2.jpg":
-			fileName = "cmd/http/files/2.jpg"
-			if contentType == "" {
-				contentType = "image/jpg"
-			}
-		case "/123.txt":
-			fileName = "cmd/http/files/123.txt"
-			if contentType == "" {
-				contentType = "text/html"
-			}
-		case "/1.pdf":
-			fileName = "cmd/http/files/1.pdf"
-			if contentType == "" {
-				contentType = "application/pdf"
-			}
-		case "/html5.png":
-			fileName = "cmd/http/files/html5.png"
-			if contentType == "" {
-				contentType = "application/pdf"
-			}
-		default:
-			fileName = "cmd/http/files/404-NotFound.png"
-			contentType = "image/png"
+			writeHeader(conn, fileName, contentType, request)
+			return
 		}
-		writeHeader(conn, fileName, contentType, request)
-		return
 	}
 }
 

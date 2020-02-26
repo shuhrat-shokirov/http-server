@@ -64,58 +64,42 @@ func handleConn(conn net.Conn) {
 	}
 
 	method, request, protocol := parts[0], parts[1], parts[2]
-	contentType := ""
-	fileName := ""
+	contentTypeDownload := ""
 	if method == "GET" {
 		if protocol == "HTTP/1.1" {
 			if strings.Contains(request, "?download") {
-				contentType = "application/octet-stream"
+				contentTypeDownload = "application/octet-stream"
 				request = strings.Replace(request, "?download", "", -1)
 			}
 			switch request {
 			case "/":
-				fileName = "cmd/http/files/index.html"
-				if contentType == "" {
-					contentType = "text/html"
-				}
+				optimization(conn,"index.html", textOrHtml, contentTypeDownload, request)
 			case "/index-html.html":
-				fileName = "cmd/http/files/index-html.html"
-				if contentType == "" {
-					contentType = "text/html"
-				}
+				optimization(conn,"index-html.html", textOrHtml, contentTypeDownload, request)
 			case "/1.png":
-				fileName = "cmd/http/files/1.png"
-				if contentType == "" {
-					contentType = "image/png"
-				}
+				optimization(conn,"1.png", imageOrPng, contentTypeDownload, request)
 			case "/2.jpg":
-				fileName = "cmd/http/files/2.jpg"
-				if contentType == "" {
-					contentType = "image/jpg"
-				}
+				optimization(conn,"2.jpg", imageOrImg, contentTypeDownload, request)
 			case "/123.txt":
-				fileName = "cmd/http/files/123.txt"
-				if contentType == "" {
-					contentType = "text/html"
-				}
+				optimization(conn,"123.txt", textOrHtml, contentTypeDownload, request)
 			case "/1.pdf":
-				fileName = "cmd/http/files/1.pdf"
-				if contentType == "" {
-					contentType = "application/pdf"
-				}
+				optimization(conn,"1.pdf", pdf, contentTypeDownload, request)
 			case "/html5.png":
-				fileName = "cmd/http/files/html5.png"
-				if contentType == "" {
-					contentType = "application/pdf"
-				}
+				optimization(conn,"html5.png", imageOrPng, contentTypeDownload, request)
 			default:
-				fileName = "cmd/http/files/404-NotFound.png"
-				contentType = "image/png"
+				optimization(conn,"404-NotFound.png", imageOrPng, contentTypeDownload, request)
 			}
-			writeHeader(conn, fileName, contentType, request)
 			return
 		}
 	}
+}
+
+func optimization(conn net.Conn, fileName, contentType, contentTypeDownload, request string) {
+	fileName = wayInFiles + fileName
+	if contentTypeDownload != "" {
+		contentType = contentTypeDownload
+	}
+	writeHeader(conn, fileName, contentType, request)
 }
 
 func writeHeader(conn net.Conn, fileName, contentType, request string) {
